@@ -1,0 +1,147 @@
+.money-manager-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.profile-container {
+  background-image: url('https://assets.ccbp.in/frontend/react-js/money-manager/money-manager-bg.png');
+  background-size: cover;
+  width: 100%;
+  padding: 15px;
+}
+
+.richard-head {
+  color: #475569;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: 'Roboto';
+}
+
+.richard-para {
+  color: #475569;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Roboto';
+}
+span {
+  color: #0b69ff;
+}
+
+.transaction-history-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.transaction-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  border: 2px solid #7e858e;
+  border-radius: 10px;
+  padding: 20px;
+  margin-right: 40px;
+}
+
+.transaction-head {
+  color: #334155;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Roboto';
+}
+
+label {
+  color: #7e858e;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: 'Roboto';
+}
+
+input {
+  padding: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.select-container {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.option-item {
+  padding: 10px;
+}
+
+.add-btn {
+  background-color: #0b69ff;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: 'Roboto';
+  margin-top: 10px;
+  width: 30%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.history-container {
+  border: 2px solid #7e858e;
+  border-radius: 10px;
+  flex-grow: 2;
+  padding: 20px;
+}
+
+.history-head {
+  color: #1e293b;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Roboto';
+}
+
+.transaction-container1 {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  padding-left: 0px;
+  width: 100%;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.transaction-item-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  border: 1px solid #7e858e;
+  padding-left: 10px;
+}
+
+.title,
+.amount,
+.type {
+  color: #1e293b;
+  font-weight: bold;
+  font-family: 'Roboto';
+  margin-right: 30px;
+  width: 15%;
+}
+
+@media screen and (max-width: 576px) {
+  .transaction-history-container {
+    flex-direction: column;
+  }
+  .transaction-container {
+    margin-right: 0px;
+    margin-bottom: 20px;
+  }
+}
