@@ -17,72 +17,101 @@ const transactionTypeOptions = [
 
 class MoneyManager extends Component {
   state = {
-    title: '',
-    amount: '',
-    moneyList: [],
-    type: 'Income',
-    totalIncome: 0,
-    totalExpense: 0,
+    titleInput: '',
+    amountInput: '',
+
+    transactionList: [],
+    optionId: transactionTypeOptions[0].optionId,
   }
 
   onChangeTitle = event => {
-    this.setState({title: event.target.value})
+    this.setState({titleInput: event.target.value})
   }
 
   onChangeAmount = event => {
-    this.setState({amount: event.target.value})
+    this.setState({amountInput: event.target.value})
   }
 
   onChangeType = event => {
-    this.setState({type: event.target.value})
+    this.setState({optionId: event.target.value})
   }
 
   onSubmitForm = event => {
-    const {title, amount, type} = this.state
     event.preventDefault()
+    const {titleInput, amountInput, optionId} = this.state
 
-    const newItem = {
+    const typeInput = transactionTypeOptions.find(
+      each => each.optionId === optionId,
+    )
+    const {displayText} = typeInput
+
+    const newTransaction = {
       id: uuidv4(),
-      title,
-      amount,
-      type,
+      title: titleInput,
+      amount: parseInt(amountInput),
+      type: displayText,
     }
 
     this.setState(prevState => ({
-      moneyList: [...prevState.moneyList, newItem],
-      title: '',
-      amount: '',
-      type: 'Income',
-      totalIncome:
-        prevState.totalIncome + (type === 'Income' && parseInt(amount)),
-      totalExpense:
-        prevState.totalExpense + (type === 'Expenses' && parseInt(amount)),
+      transactionList: [...prevState.transactionList, newTransaction],
+      titleInput: '',
+      amountInput: '',
+      optionId: transactionTypeOptions[0].optionId,
     }))
+  }
+
+  getIncomeAmount = () => {
+    const {transactionList} = this.state
+    let income = 0
+    transactionList.forEach(eachItem => {
+      if (eachItem.type === transactionTypeOptions[0].displayText) {
+        income += eachItem.amount
+      }
+    })
+    return income
+  }
+
+  getExpenseAmount = () => {
+    const {transactionList} = this.state
+    let expense = 0
+    transactionList.forEach(eachItem => {
+      if (eachItem.type === transactionTypeOptions[1].displayText) {
+        expense += eachItem.amount
+      }
+    })
+    return expense
+  }
+
+  getBalanceAmount = () => {
+    const {transactionList} = this.state
+    let incomeAmount = 0
+    let expenseAmount = 0
+    let balanceAmount = 0
+    transactionList.forEach(eachItem => {
+      if (eachItem.type === transactionTypeOptions[0].displayText) {
+        incomeAmount += eachItem.amount
+      } else {
+        expenseAmount += eachItem.amount
+      }
+    })
+
+    balanceAmount = incomeAmount - expenseAmount
+    return balanceAmount
   }
 
   onDelete = id => {
-    const {moneyList} = this.state
-    const filteredList = moneyList.filter(each => each.id !== id)
-    const deletedList = moneyList.find(each => each.id === id)
-    const {amount, type} = deletedList
-    this.setState(prevState => ({
-      moneyList: filteredList,
-      totalIncome:
-        prevState.totalIncome - (type === 'Income' && parseInt(amount)),
-      totalExpense:
-        prevState.totalExpense - (type === 'Expenses' && parseInt(amount)),
-    }))
+    const {transactionList} = this.state
+    const filteredResults = transactionList.filter(each => each.id !== id)
+    this.setState({transactionList: filteredResults})
   }
 
   render() {
-    const {
-      moneyList,
-      type,
-      title,
-      amount,
-      totalExpense,
-      totalIncome,
-    } = this.state
+    const {titleInput, amountInput, transactionList, optionId} = this.state
+
+    const getBalance = this.getBalanceAmount()
+    const getIncome = this.getIncomeAmount()
+    const getExpense = this.getExpenseAmount()
+
     return (
       <div className="money-manager-container">
         <div className="profile-container">
@@ -91,7 +120,11 @@ class MoneyManager extends Component {
             Welcome back to your <span>Money Manager</span>
           </p>
         </div>
-        <MoneyDetails expense={totalExpense} income={totalIncome} />
+        <MoneyDetails
+          balance={getBalance}
+          income={getIncome}
+          expense={getExpense}
+        />
 
         <div className="transaction-history-container">
           <form className="transaction-container" onSubmit={this.onSubmitForm}>
@@ -103,25 +136,29 @@ class MoneyManager extends Component {
               id="title"
               placeholder="TITLE"
               onChange={this.onChangeTitle}
-              value={title}
+              value={titleInput}
             />
             <label htmlFor="amount">AMOUNT</label>
             <input
               id="amount"
-              type="number"
+              type="text"
               placeholder="AMOUNT"
               onChange={this.onChangeAmount}
-              value={amount}
+              value={amountInput}
             />
-            <label htmlFor="type">TYPE</label>
+            <label htmlFor="select">TYPE</label>
             <select
-              id="type"
+              id="select"
               className="select-container"
               onChange={this.onChangeType}
-              value={type}
+              value={optionId}
             >
               {transactionTypeOptions.map(eachType => (
-                <option key={eachType.optionId} className="option-item">
+                <option
+                  key={eachType.optionId}
+                  className="option-item"
+                  value={eachType.optionId}
+                >
                   {eachType.displayText}
                 </option>
               ))}
@@ -138,7 +175,8 @@ class MoneyManager extends Component {
                 <p className="amount">Amount</p>
                 <p className="type">Type</p>
               </li>
-              {moneyList.map(each => (
+
+              {transactionList.map(each => (
                 <TransactionItem
                   key={each.id}
                   each={each}
