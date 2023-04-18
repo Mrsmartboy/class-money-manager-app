@@ -7,7 +7,7 @@ const TransactionItem = props => {
   const onClickDelete = () => {
     onDelete(id)
   }
-
+  console.log(title, amount, type)
   return (
     <li className="item-container-transaction">
       <>
